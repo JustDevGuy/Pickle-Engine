@@ -6,14 +6,10 @@ Model::Model(GLuint vaoID, int vertexCount)
     this->vertexCount = vertexCount;
 }
 
+// Setters
 void Model::SetIsTransparency(bool value)
 {
     this->isTransparency = value;
-}
-
-bool Model::GetIsTransparency()
-{
-    return this->isTransparency;
 }
 
 void Model::SetFakeLighting(bool value)
@@ -21,14 +17,20 @@ void Model::SetFakeLighting(bool value)
     this->useFakeLighting = value;
 }
 
-bool Model::GetFakeLighting()
-{
-    return this->useFakeLighting;
-}
-
 void Model::SetUseReflection(bool value)
 {
     this->useReflection = value;
+}
+
+// Getters
+bool Model::GetIsTransparency()
+{
+    return this->isTransparency;
+}
+
+bool Model::GetFakeLighting()
+{
+    return this->useFakeLighting;
 }
 
 bool Model::GetUseReflection()

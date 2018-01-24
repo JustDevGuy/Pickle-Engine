@@ -2,18 +2,18 @@
 
 Application::Application(std::string title, int width, int height, bool fullscreenMode)
 {
-    //Initialize GLFW
+    // Initialize GLFW
     if(!glfwInit())
         std::cout << "error in initialize GLFW" << std::endl;
 
-    //Set some OpenGL basic configurations
+    // Set some OpenGL basic configurations
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    //Check if the game is in fullscreen mode
+    // Check if the game is in fullscreen mode
     if(fullscreenMode)
     {
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
@@ -26,10 +26,10 @@ Application::Application(std::string title, int width, int height, bool fullscre
         glfwSetWindowPos(display, 400, 100);
     }
 
-    //Set infinity motion for mouse
+    // Set infinity motion for mouse
     glfwSetInputMode(display, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    //Enable OpenGL comparability
+    // Enable OpenGL comparability
     glfwMakeContextCurrent(display);
     if(glewInit() != GLEW_OK)
         std::cout << "error in initialize GLEW" << std::endl;
@@ -37,11 +37,13 @@ Application::Application(std::string title, int width, int height, bool fullscre
 
 void Application::Update()
 {
-    CalculateTime(); //Show framerate in console
+    CalculateTime(); // Show frame rate in console
 
+    // Clean up screen and setup
     glfwSwapBuffers(display);
     glfwPollEvents();
 
+    // Calculate the mouse velocity
     oldMousePosX = mousePosX;
     mousePosX = GetMousePosX();
     mouseVelocityX = mousePosX - oldMousePosX;
@@ -50,10 +52,11 @@ void Application::Update()
     mousePosY = GetMousePosY();
     mouseVelocityY = mousePosY - oldMousePosY;
 
-    if(glfwGetKey(display, GLFW_KEY_ESCAPE) == GLFW_PRESS) //Exit key
+    if(glfwGetKey(display, GLFW_KEY_ESCAPE) == GLFW_PRESS) // Exit key
         glfwSetWindowShouldClose(display, true);
 }
 
+// Getters
 GLFWwindow* Application::GetWindow()
 {
     return display;
@@ -108,6 +111,11 @@ bool Application::IsOpen()
     return !glfwWindowShouldClose(display);
 }
 
+double Application::GetDeltaTime()
+{
+    return this->deltaTime;
+}
+
 void Application::CalculateTime()
 {
     lastTime = currentTime;
@@ -121,11 +129,6 @@ void Application::CalculateTime()
         frameCount = 0;
         lastClock += 1.0f;
     }
-}
-
-double Application::GetDeltaTime()
-{
-    return this->deltaTime;
 }
 
 void Application::Close()

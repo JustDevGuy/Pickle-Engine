@@ -14,9 +14,9 @@ public:
     Model LoadModel(std::string objFile);
     void CleanUp();
 private:
-    void StoreDataInAttributeList(int location, int attributeSize, std::vector<glm::vec3> data);
-    void StoreDataInAttributeList(int location, int attributeSize, std::vector<glm::vec2> data);
-    void BindIndicesVBO(std::vector<unsigned int> indices);
+    void StoreData(int location, int attributeSize, std::vector<glm::vec3> data);
+    void StoreData(int location, int attributeSize, std::vector<glm::vec2> data);
+    void BindIndices(std::vector<unsigned int> indices);
 
     std::vector<GLuint> vaos;
     std::vector<GLuint> vbos;

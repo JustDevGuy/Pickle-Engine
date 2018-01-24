@@ -7,21 +7,24 @@
 #include "Loader.h"
 #include "Texture.h"
 
+// Physics calculations
 struct RigidBody
 {
-    int id;
-    bool isStatic;
-    glm::vec3 force;
+    unsigned int id;
     float radius;
     float bauncing;
+    bool isStatic;
+    glm::vec3 force;
 };
 
 class Entity
 {
 public:
+    // Constructor and destructor
     Entity(Model m_model, const std::string& textureFile, glm::vec3 position, glm::vec3 rotation);
     void Destroy();
 
+    // Components
     Model model;
     Texture texture;
     Transform transform;

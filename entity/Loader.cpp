@@ -2,6 +2,7 @@
 
 Model Loader::LoadModel(std::string objFile)
 {
+    // Create model and put the components in it
     IndexedModel model = OBJModel(objFile).ToIndexedModel();
 
     GLuint vaoID;
@@ -9,10 +10,10 @@ Model Loader::LoadModel(std::string objFile)
     vaos.push_back(vaoID);
 
     glBindVertexArray(vaoID);
-    BindIndicesVBO(model.indices);
-    StoreDataInAttributeList(0, 3, model.positions);
-    StoreDataInAttributeList(1, 2, model.texCoords);
-    StoreDataInAttributeList(2, 3, model.normals);
+    BindIndices(model.indices);
+    StoreData(0, 3, model.positions);
+    StoreData(1, 2, model.texCoords);
+    StoreData(2, 3, model.normals);
     glBindVertexArray(0);
 
     int vertexCount = model.indices.size();
@@ -20,7 +21,8 @@ Model Loader::LoadModel(std::string objFile)
     return out_model;
 }
 
-void Loader::StoreDataInAttributeList(int location, int attributeSize, std::vector<glm::vec3>data)
+// Store attributes in the OpenGL memory to use in GLSL
+void Loader::StoreData(int location, int attributeSize, std::vector<glm::vec3>data)
 {
     GLuint vboID;
     glGenBuffers(1, &vboID);
@@ -31,7 +33,7 @@ void Loader::StoreDataInAttributeList(int location, int attributeSize, std::vect
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Loader::StoreDataInAttributeList(int location, int attributeSize, std::vector<glm::vec2>data)
+void Loader::StoreData(int location, int attributeSize, std::vector<glm::vec2>data)
 {
     GLuint vboID;
     glGenBuffers(1, &vboID);
@@ -42,7 +44,8 @@ void Loader::StoreDataInAttributeList(int location, int attributeSize, std::vect
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Loader::BindIndicesVBO(std::vector<unsigned int> indices)
+// Create indices
+void Loader::BindIndices(std::vector<unsigned int> indices)
 {
     GLuint vboID;
     glGenBuffers(1, &vboID);
@@ -53,6 +56,7 @@ void Loader::BindIndicesVBO(std::vector<unsigned int> indices)
 
 void Loader::CleanUp()
 {
+    // Delete VAOS and VBOS
     for(GLuint i = 0; i < vaos.size() * sizeof(vaos[0]); i++)
         glDeleteVertexArrays(1, &vaos[i]);
     for(GLuint i = 0; i < vbos.size() * sizeof(vbos[0]); i++)

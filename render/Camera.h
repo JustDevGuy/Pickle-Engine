@@ -9,7 +9,7 @@
 class Camera
 {
 public:
-    //Constructor
+    // Constructor
     Camera(glm::vec3 startPosition, int width, int height)
     {
         m_position -= startPosition;
@@ -22,21 +22,20 @@ public:
         return m_projection;
     }
 
-    //Update camera information
+    // Update camera information
     glm::mat4 GetViewMatrix()
     {
         UpdateViewMatrix();
         return m_view;
     }
 
-    //Getters and setters of camera
+    // Getters and setters of camera
     glm::vec3 GetPosition() { return this->m_position; }
     void SetPosition(glm::vec3 pos) { m_position.x = pos.x; m_position.y = pos.y; m_position.z = pos.z; }
 
-    //Move camera function
+    // Move camera function
     void Move(Application display)
     {
-        //Movement of transform
         if(glfwGetKey(display.GetWindow(), GLFW_KEY_W) == GLFW_TRUE) dz = -9 * display.GetDeltaTime();
         else if(glfwGetKey(display.GetWindow(), GLFW_KEY_S) == GLFW_TRUE) dz = 9 * display.GetDeltaTime();
         else dz = 0;
@@ -45,16 +44,17 @@ public:
         else if(glfwGetKey(display.GetWindow(), GLFW_KEY_D) == GLFW_TRUE) dx = -9 * display.GetDeltaTime();
         else dx = 0;
 
+        // Set the view matrix with the camera positions and rotations
         glm::vec3 forward(m_view[0][2], m_view[1][2], m_view[2][2]);
         glm::vec3 strafe(m_view[0][0], m_view[1][0], m_view[2][0]);
         m_position += (-dz * forward + dx * strafe);
         UpdateViewMatrix();
 
-        //Movement of camera
+        // Movement of camera
         float rotationVelocity = 0.4f * display.GetDeltaTime();
         m_rotation.y += display.GetMouseVelocityX() * rotationVelocity;
         m_rotation.x += display.GetMouseVelocityY() * rotationVelocity;
-        m_rotation.x = glm::clamp(m_rotation.x, -1.0f, 1.3f); //Limit camera X rotation
+        m_rotation.x = glm::clamp(m_rotation.x, -1.0f, 1.3f); // Limit camera X rotation
     }
 
 private:

@@ -7,18 +7,16 @@ Terrain::Terrain(glm::vec3 terrainPosition, int smooth, const std::string& heigh
     terrainTexture.CreateTexture(textureFile);
     CreateTerrain(heightmapFile, smooth);
 
-    //Load once the transformation and the light
+    // Load once the transformation and the light
     shader.Start();
     shader.LoadTransformationMatrix(transform.GetTransform());
     shader.LoadLight(glm::vec3(0,300,40));
     shader.Stop();
 }
 
-//The basic terrain generation
+// The basic terrain generation
 void Terrain::RenderTerrain(Camera camera)
 {
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
     shader.Start();
     glBindVertexArray(terrainVAO);
     glEnableVertexAttribArray(0);
@@ -34,16 +32,14 @@ void Terrain::RenderTerrain(Camera camera)
     glDisableVertexAttribArray(2);
     glBindVertexArray(0);
     shader.Stop();
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-//Calculate the height of the vertex in the terrain
+// Calculate the height of the vertex in the terrain
 int Terrain::GetPixelHeight(unsigned char* data, int imageWidth, int x, int y, int smooth)
 {
-    unsigned char* pixelOffset = data + (x + imageWidth * y); //Get the image
-    float pixelHeight = (float)pixelOffset[1]; //Get height of the pixel
-    return (pixelHeight/imageWidth) * smooth; //Return the height with smooth
+    unsigned char* pixelOffset = data + (x + imageWidth * y); // Get the image
+    float pixelHeight = (float)pixelOffset[1]; // Get height of the pixel
+    return (pixelHeight/imageWidth) * smooth; // Return the height with smooth
 }
 
 void Terrain::CreateTerrain(std::string heightmapFile, int smooth)
@@ -61,21 +57,21 @@ void Terrain::CreateTerrain(std::string heightmapFile, int smooth)
     int i = 0;
     for(int z = 0; z < terrainLength; z++) for(int x = 0; x < terrainWidth; x++)
     {
-        //Calculate vertices
+        // Calculate vertices
         glm::vec3 vertex = glm::vec3(x-terrainWidth/2, GetPixelHeight(data, y, x, z, smooth), z-terrainLength/2);
 
-        //Put the vertices and texture coords
+        // Put the vertices and texture coordinates
         vertices.push_back(vertex);
         textureCoords.push_back(glm::vec2(x,z));
 
-        //Calculate the normals based in the terrain height
+        // Calculate the normals based in the terrain height
         float heightL = GetPixelHeight(data, y, x-1, z, smooth);
         float heightR = GetPixelHeight(data, y, x+1, z, smooth);
         float heightD = GetPixelHeight(data, y, x, z-1, smooth);
         float heightU = GetPixelHeight(data, y, x, z+1, smooth);
         normals.push_back(glm::normalize(glm::vec3(heightL - heightR, 2.0f, heightD - heightU)));
 
-        //Calculate indices
+        // Calculate indices
         if((i+1 % (int)terrainWidth) != 0 && z+1 < terrainLength)
         {
             glm::vec3 triangle1, triangle2;
@@ -100,7 +96,7 @@ void Terrain::CreateTerrain(std::string heightmapFile, int smooth)
         i++;
     }
 
-    //Bind openGL attributes
+    // Bind OpenGL attributes
     verticesCount = indices.size();
 
     glGenVertexArrays(1, &terrainVAO);

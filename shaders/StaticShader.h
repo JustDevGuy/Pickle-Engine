@@ -6,35 +6,42 @@
 class StaticShader : public ShaderSource
 {
 public:
+    // Load shaders
     StaticShader() : ShaderSource(".//res//shaders//vertexShader.glsl", ".//res//shaders//fragmentShader.glsl")
     {
     }
 
+    // Set if model gonna reflect light
     void UseReflection(bool value)
     {
         LoadBoolean(location_useReflection, value);
     }
 
-    void UseFakeLighting(bool value) //Doesn't use light
+    // Model not need light
+    void UseFakeLighting(bool value)
     {
         LoadBoolean(location_useFakeLight, value);
     }
 
-    void LoadLight(glm::vec3 lightPosition) //Light
+    // Load a light position
+    void LoadLight(glm::vec3 lightPosition)
     {
         LoadVector(location_lightPosition, lightPosition);
     }
 
-    void LoadTransformationMatrix(glm::mat4 matrix) //Position, rotation and scale of model
+    // Load the entity transform
+    void LoadTransformationMatrix(glm::mat4 matrix)
     {
         LoadMatrix(location_transformationMatrix, matrix);
     }
 
-    void LoadViewMatrix(glm::mat4 viewMatrix) //Camera perspective and etc
+    // Load the camera matrix
+    void LoadViewMatrix(glm::mat4 viewMatrix)
     {
         LoadMatrix(location_viewMatrix, viewMatrix);
     }
 private:
+    // Uniform variables location
     const int location_transformationMatrix = GetUniformLocation("transform");
     const int location_viewMatrix = GetUniformLocation("view");
     const int location_lightPosition = GetUniformLocation("lightPosition");

@@ -7,6 +7,7 @@ Physics::Physics(float gravity)
 
 void Physics::UsePhysics(Entity& entity, float deltaTime)
 {
+    // Check collision with the plane, if true, bounce
     if(entity.transform.GetPosition().y - entity.rigidbody.radius/2 <= 0)
     {
         entity.rigidbody.force.y = (-entity.rigidbody.force.y + entity.rigidbody.bauncing)/2;
@@ -18,9 +19,11 @@ void Physics::UsePhysics(Entity& entity, float deltaTime)
     }
     else
     {
+        // if false, apply more gravity to object
         entity.rigidbody.force.y += gravity * deltaTime;
     }
 
+    // Apply forces on the transform positions
     if(!entity.rigidbody.isStatic)
     {
         entity.transform.Translate(entity.rigidbody.force.x * deltaTime,
@@ -33,11 +36,13 @@ void Physics::UsePhysics(Entity& entity, float deltaTime)
 
 void Physics::CheckCollision(Entity& collider1, Entity& collider2, float deltaTime)
 {
+    // Check if not colliding with the same object
     if(collider1.rigidbody.id != collider2.rigidbody.id)
     {
         float distance = glm::distance(collider1.transform.GetPosition(), collider2.transform.GetPosition());
         if(distance <= collider1.rigidbody.radius)
         {
+            // Apply force between objects
             glm::vec3 force = collider1.transform.GetPosition() - collider2.transform.GetPosition();
             collider1.rigidbody.force += (force + collider1.rigidbody.bauncing) * deltaTime;
             collider2.rigidbody.force -= (force + collider2.rigidbody.bauncing) * deltaTime;

@@ -6,16 +6,19 @@
 class SkyboxShader : public ShaderSource
 {
 public:
+    // Load shaders
     SkyboxShader() : ShaderSource(".//res//shaders//skyboxVertex.glsl", ".//res//shaders//skyboxFragment.glsl")
     {
     }
 
-    void LoadTransformationMatrix(glm::mat4 matrix) //Translate, rotate and scale of model
+    // Load the position of the skybox to shader
+    void LoadTransformationMatrix(glm::mat4 matrix)
     {
         LoadMatrix(location_transformationMatrix, matrix);
     }
 
-    void LoadViewMatrix(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) //Camera perspective and etc
+    // Show the skybox in the camera
+    void LoadViewMatrix(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {
         viewMatrix[3][0] = 0;
         viewMatrix[3][1] = 0;
@@ -24,6 +27,7 @@ public:
         LoadMatrix(location_projectionMatrix, projectionMatrix);
     }
 private:
+    // Uniform variables locations
     const int location_transformationMatrix = GetUniformLocation("transform");
     const int location_lightDirection = GetUniformLocation("lightDirection");
     const int location_viewMatrix = GetUniformLocation("viewMatrix");
