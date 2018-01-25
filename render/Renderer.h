@@ -22,7 +22,7 @@ private:
     std::map<Model,std::vector<Entity>> entities; // List of entities
     StaticShader shader; // One static shader for all models
 
-    void Prepare(float r, float g, float b); // RGB of background color
+    static void Prepare(float r, float g, float b); // RGB of background color
 
     // Render model functions
     void PrepareModel(Model model);

@@ -1,11 +1,6 @@
 #include "Physics.h"
 
-Physics::Physics(float gravity)
-{
-    this->gravity = gravity;
-}
-
-void Physics::UsePhysics(Entity& entity, float deltaTime)
+void Physics::UsePhysics(Entity& entity, float gravityForce, float deltaTime)
 {
     // Check collision with the plane, if true, bounce
     if(entity.transform.GetPosition().y - entity.rigidbody.radius/2 <= 0)
@@ -20,7 +15,7 @@ void Physics::UsePhysics(Entity& entity, float deltaTime)
     else
     {
         // if false, apply more gravity to object
-        entity.rigidbody.force.y += gravity * deltaTime;
+        entity.rigidbody.force.y += gravityForce * deltaTime;
     }
 
     // Apply forces on the transform positions

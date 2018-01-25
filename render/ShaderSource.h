@@ -15,8 +15,8 @@ public:
     void Stop();
     void CleanUp();
 private:
-    const char *ReadFile(std::string fileName);
-    void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage);
+    static const char *ReadFile(std::string fileName);
+    static void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage);
 
     GLuint vertexShader, fragmentShader;
     GLuint program;
@@ -24,10 +24,10 @@ protected:
     void BindAttributeLocation(int location, std::string variableName);
     int GetUniformLocation(std::string uniformName);
 
-    void LoadFloat(int location, float value);
-    void LoadVector(int location, glm::vec3 value);
-    void LoadBoolean(int location, bool value);
-    void LoadMatrix(int location, glm::mat4 value);
+    static void LoadFloat(int location, float value);
+    static void LoadVector(int location, glm::vec3 value);
+    static void LoadBoolean(int location, bool value);
+    static void LoadMatrix(int location, glm::mat4 value);
 };
 
 #endif // SHADERSOURCE_H

@@ -5,7 +5,7 @@ int main(int argc, char* argv[])
     //Initialize the basics
     Application window("Pickle Engine", 800, 600, false);
     Camera camera(glm::vec3(0, 5, 20), window.GetWidth(), window.GetHeight());
-    Physics physics(-7.5f);
+    Physics physics;
     Loader loader;
 
     //Create models
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
         {
             for(auto &rigidbody : spheres)
             {
-                physics.UsePhysics(rigidbody, window.GetDeltaTime());
+                physics.UsePhysics(rigidbody, -7.5f, window.GetDeltaTime());
                 for(auto &target : spheres)
                 {
                     physics.CheckCollision(rigidbody, target, window.GetDeltaTime());
@@ -52,7 +52,6 @@ int main(int argc, char* argv[])
 
         //Render all
         renderer.Render(glm::vec3(0,10,0), camera);
-        //sky.RenderSkybox(camera);
         window.Update();
     }
 

@@ -16,7 +16,7 @@ public:
     void Destroy();
 private:
     void CreateTerrain(std::string heightmapFile, int smooth);
-    int GetPixelHeight(unsigned char* data, int x, int imageWidth, int y, int smooth);
+    static int GetPixelHeight(unsigned char* data, int x, int imageWidth, int y, int smooth);
 
     GLuint terrainVAO, verticesVBO, normalsVBO, indicesVBO, textureVBO;
     int verticesCount;
