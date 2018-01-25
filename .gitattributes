@@ -1,7 +1,0 @@
-*.gitattributes
-*.cbp
-*.depend
-*.layout
-bin/
-libraries/
-obj/
