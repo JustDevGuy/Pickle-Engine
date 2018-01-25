@@ -15,7 +15,7 @@ public:
     void Render(glm::vec3 lightDirection, Camera camera); // Render all entities and clean the list
 
     void AddEntity(Entity entity); // Add a entity to list
-    void AddEntities(std::vector<Entity> identityList); // Add multiple entities
+    void AddEntities(std::vector<Entity> entityList); // Add multiple entities
 
     void CleanUp(); // Destroy the renderer
 private:
@@ -26,7 +26,7 @@ private:
 
     // Render model functions
     void PrepareModel(Model model);
-    void PrepareInstance(Entity identity);
+    void PrepareInstance(Entity entity);
     void UnbindModel();
 };
 

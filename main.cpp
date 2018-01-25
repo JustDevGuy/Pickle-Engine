@@ -13,13 +13,12 @@ int main(int argc, char* argv[])
 
     Entity sphere(loader.LoadModel(".//res//entities//monkey.obj"), ".//res//textures//solidColor.png", glm::vec3(0,0,0), glm::vec3(0,0,0));
     std::vector<Entity> spheres;
-    sphere.rigidbody.radius = 2;
+    sphere.rigidbody.radius = 1.4f;
     sphere.model.SetUseReflection(true);
 
     for(int i = 1; i < 40; i++)
     {
         sphere.transform.SetPosition(rand() % 5 + (-5), rand() % 5 + 15, rand() % 5 + (-5));
-        sphere.rigidbody.bauncing = 0;
         sphere.rigidbody.id = i;
         spheres.push_back(sphere);
     }
@@ -32,6 +31,11 @@ int main(int argc, char* argv[])
     {
         //Transform movement example
         camera.Move(window);
+
+        //Set one of the entities to camera, to calculate collisions to it
+        spheres[0].transform.SetPosition(camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+        spheres[0].transform.SetRotation(0, 0, 0);
+        spheres[0].transform.SetScale(0);
 
         //Basic physics
         if(!window.IsKeyPressed(GLFW_KEY_SPACE))

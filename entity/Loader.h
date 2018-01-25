@@ -16,7 +16,7 @@ public:
 private:
     static GLuint StoreData(int location, int attributeSize, std::vector<glm::vec3> data);
     static GLuint StoreData(int location, int attributeSize, std::vector<glm::vec2> data);
-    void BindIndices(std::vector<unsigned int> indices);
+    static GLuint BindIndices(std::vector<unsigned int> indices);
 
     std::vector<GLuint> vaos;
     std::vector<GLuint> vbos;

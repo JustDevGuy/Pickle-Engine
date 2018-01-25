@@ -10,6 +10,8 @@ class Physics
 public:
     static void UsePhysics(Entity& entity, float gravityForce, float deltaTime); // Use physics for the rigidbody
     static void CheckCollision(Entity& collider1, Entity& collider2, float deltaTime); // Calculate collision between two rigidbodies
+private:
+    static float Lerp(float a, float b, float t);
 };
 
 #endif // PHYSICS_H

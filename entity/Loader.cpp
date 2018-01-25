@@ -10,7 +10,7 @@ Model Loader::LoadModel(std::string objFile)
     vaos.push_back(vaoID);
 
     glBindVertexArray(vaoID);
-    BindIndices(model.indices);
+    vbos.push_back(BindIndices(model.indices));
     vbos.push_back(StoreData(0, 3, model.positions));
     vbos.push_back(StoreData(1, 2, model.texCoords));
     vbos.push_back(StoreData(2, 3, model.normals));
@@ -45,13 +45,13 @@ GLuint Loader::StoreData(int location, int attributeSize, std::vector<glm::vec2>
 }
 
 // Create indices
-void Loader::BindIndices(std::vector<unsigned int> indices)
+GLuint Loader::BindIndices(std::vector<unsigned int> indices)
 {
     GLuint vboID;
     glGenBuffers(1, &vboID);
-    vbos.push_back(vboID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), indices.data(), GL_STATIC_DRAW);
+    return vboID;
 }
 
 void Loader::CleanUp()

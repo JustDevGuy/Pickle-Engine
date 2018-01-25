@@ -8,7 +8,7 @@ void Renderer::Render(glm::vec3 lightDirection, Camera camera)
     shader.LoadLight(lightDirection);
     shader.LoadViewMatrix(camera.GetProjection() * camera.GetViewMatrix());
 
-    for(auto const& i : entities)
+    for(auto const &i : entities)
     {
         PrepareModel(i.first);
         std::vector<Entity> batch = i.second;
@@ -37,15 +37,15 @@ void Renderer::AddEntity(Entity entity)
     }
 }
 
-void Renderer::AddEntities(std::vector<Entity>identityList)
+void Renderer::AddEntities(std::vector<Entity>entityList)
 {
-    if(entities.find(identityList[0].model) != entities.end()) ///MODEL FOUND
+    if(entities.find(entityList[0].model) != entities.end()) ///MODEL FOUND
     {
-        entities[identityList[0].model].insert(entities[identityList[0].model].end(), identityList.begin(), identityList.end());
+        entities[entityList[0].model].insert(entities[entityList[0].model].end(), entityList.begin(), entityList.end());
     }
     else ///MODEL NOT FOUND
     {
-        entities[identityList[0].model] = identityList;
+        entities[entityList[0].model] = entityList;
     }
 }
 
@@ -91,8 +91,8 @@ void Renderer::UnbindModel()
     glBindVertexArray(0);
 }
 
-void Renderer::PrepareInstance(Entity identity) //Prepare model texture and shader
+void Renderer::PrepareInstance(Entity entity) //Prepare model texture and shader
 {
-    shader.LoadTransformationMatrix(identity.transform.GetTransform());
-    identity.texture.Bind();
+    shader.LoadTransformationMatrix(entity.transform.GetTransform());
+    entity.texture.Bind();
 }

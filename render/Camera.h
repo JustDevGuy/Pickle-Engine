@@ -30,7 +30,7 @@ public:
     }
 
     // Getters and setters of camera
-    glm::vec3 GetPosition() { return this->m_position; }
+    glm::vec3 GetPosition() { return -this->m_position; }
     void SetPosition(glm::vec3 pos) { m_position.x = pos.x; m_position.y = pos.y; m_position.z = pos.z; }
 
     // Move camera function

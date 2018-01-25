@@ -7,8 +7,10 @@ void Physics::UsePhysics(Entity& entity, float gravityForce, float deltaTime)
     {
         entity.rigidbody.force.y = (-entity.rigidbody.force.y + entity.rigidbody.bauncing)/2;
 
-        entity.rigidbody.force.x = Lerp(entity.rigidbody.force.x, 0.0f, 2.0f * deltaTime);
-        entity.rigidbody.force.z = Lerp(entity.rigidbody.force.z, 0.0f, 2.0f * deltaTime);
+        if(entity.rigidbody.force.x >= 0 || entity.rigidbody.force.x <= 0)
+            entity.rigidbody.force.x -= (entity.rigidbody.force.x/2) * deltaTime;
+        if(entity.rigidbody.force.z >= 0 || entity.rigidbody.force.z <= 0)
+            entity.rigidbody.force.z -= (entity.rigidbody.force.z/2) * deltaTime;
     }
     else
     {
@@ -37,15 +39,10 @@ void Physics::CheckCollision(Entity& collider1, Entity& collider2, float deltaTi
         {
             // Apply force between objects
             const glm::vec3 force = collider1.transform.GetPosition() - collider2.transform.GetPosition();
-            collider1.rigidbody.force += 0.5f * force;
-            collider2.rigidbody.force -= 0.5f * force;
+            collider1.rigidbody.force += (5.f/force + collider1.rigidbody.bauncing) * deltaTime;
+            collider2.rigidbody.force -= (5.f/force + collider2.rigidbody.bauncing) * deltaTime;
         }
     }
-}
-
-float Physics::Lerp(float a, float b, float t)
-{
-    return (1-t)*a + t*b;
 }
 
 
