@@ -49,12 +49,6 @@ public:
         glm::vec3 strafe(m_view[0][0], m_view[1][0], m_view[2][0]);
         m_position += (-dz * forward + dx * strafe);
         UpdateViewMatrix();
-
-        // Movement of camera
-        float rotationVelocity = 0.4f * display.GetDeltaTime();
-        m_rotation.y += display.GetMouseVelocityX() * rotationVelocity;
-        m_rotation.x += display.GetMouseVelocityY() * rotationVelocity;
-        m_rotation.x = glm::clamp(m_rotation.x, -1.0f, 1.3f); // Limit camera X rotation
     }
 
 private:

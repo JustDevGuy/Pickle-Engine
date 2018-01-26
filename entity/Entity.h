@@ -11,8 +11,9 @@
 struct RigidBody
 {
     unsigned int id;
-    float radius;
+    float radius = 1;
     float bauncing;
+    unsigned int collisionType;
     bool isStatic;
     glm::vec3 force;
 };

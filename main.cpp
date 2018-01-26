@@ -9,13 +9,18 @@ int main(int argc, char* argv[])
     Loader loader;
 
     //Create models
-    Entity plane(loader.LoadModel(".//res//entities//plane.obj"), ".//res//textures//stoneFloor.png", glm::vec3(0,0,0), glm::vec3(0,0,0));
+    Entity plane(loader.LoadModel(".//res//models//plane.obj"), ".//res//textures//stoneFloor.png", glm::vec3(0,0,0), glm::vec3(0,0,0));
 
-    Entity sphere(loader.LoadModel(".//res//entities//monkey.obj"), ".//res//textures//solidColor.png", glm::vec3(0,0,0), glm::vec3(0,0,0));
-    std::vector<Entity> spheres;
+    Entity cube(loader.LoadModel(".//res//models//cube.obj"), ".//res//textures//stoneFloor.png", glm::vec3(0,1.3f,0), glm::vec3(0,0,0));
+    cube.rigidbody.collisionType = 1;
+    cube.rigidbody.radius = 2.0f;
+
+    Entity sphere(loader.LoadModel(".//res//models//monkey.obj"), ".//res//textures//solidColor.png", glm::vec3(0,0,0), glm::vec3(0,0,0));
     sphere.rigidbody.radius = 1.4f;
+    sphere.rigidbody.collisionType = 0;
     sphere.model.SetUseReflection(true);
 
+    std::vector<Entity> spheres;
     for(int i = 1; i < 40; i++)
     {
         sphere.transform.SetPosition(rand() % 5 + (-5), rand() % 5 + 15, rand() % 5 + (-5));
@@ -43,6 +48,7 @@ int main(int argc, char* argv[])
             for(auto &rigidbody : spheres)
             {
                 physics.UsePhysics(rigidbody, -7.5f, window.GetDeltaTime());
+                physics.CheckCollision(cube, rigidbody, window.GetDeltaTime());
                 for(auto &target : spheres)
                 {
                     physics.CheckCollision(rigidbody, target, window.GetDeltaTime());
@@ -51,8 +57,9 @@ int main(int argc, char* argv[])
         }
 
         //Process the models to be rendered
-        renderer.AddEntities(spheres);
+        renderer.AddEntity(cube);
         renderer.AddEntity(plane);
+        renderer.AddEntities(spheres);
 
         //Render all
         renderer.Render(glm::vec3(0,10,0), camera);

@@ -32,13 +32,79 @@ void Physics::CheckCollision(Entity& collider1, Entity& collider2, float deltaTi
     // Check if not colliding with the same object
     if(collider1.rigidbody.id != collider2.rigidbody.id)
     {
-        const float distance = glm::distance(collider1.transform.GetPosition(), collider2.transform.GetPosition());
-        if(distance <= collider1.rigidbody.radius)
+        if(collider1.rigidbody.collisionType == 0 && collider1.rigidbody.collisionType == 0) // SPHERE && SPHERE
         {
-            // Apply force between objects
-            const glm::vec3 force = collider1.transform.GetPosition() - collider2.transform.GetPosition();
-            collider1.rigidbody.force += 0.5f * force;
-            collider2.rigidbody.force -= 0.5f * force;
+            const float distance = glm::distance(collider1.transform.GetPosition(), collider2.transform.GetPosition());
+            if(distance <= collider1.rigidbody.radius)
+            {
+                // Apply force between objects
+                const glm::vec3 force = collider1.transform.GetPosition() - collider2.transform.GetPosition();
+                collider1.rigidbody.force += 0.5f * force;
+                collider2.rigidbody.force -= 0.5f * force;
+            }
+        }
+        else if(collider1.rigidbody.collisionType == 1 && collider2.rigidbody.collisionType == 0) // BOX && SPHERE
+        {
+            const glm::vec3 pos = collider1.transform.GetPosition();
+            const float distance = glm::distance(collider1.transform.GetPosition(), collider2.transform.GetPosition());
+            const float radius = collider1.rigidbody.radius;
+            const std::vector<glm::vec3> edges = {
+                glm::vec3(pos.x - radius, pos.y - radius, pos.z - radius),
+                glm::vec3(pos.x - radius, pos.y - radius, pos.z + radius),
+                glm::vec3(pos.x - radius, pos.y + radius, pos.z - radius),
+                glm::vec3(pos.x - radius, pos.y + radius, pos.z + radius),
+                glm::vec3(pos.x + radius, pos.y - radius, pos.z - radius),
+                glm::vec3(pos.x + radius, pos.y - radius, pos.z + radius),
+                glm::vec3(pos.x + radius, pos.y + radius, pos.z - radius),
+                glm::vec3(pos.x + radius, pos.y + radius, pos.z + radius) };
+
+            for(int i = 0; i < 8; i++)
+            {
+                const float edgeDistance = glm::distance(edges[i], collider1.transform.GetPosition());
+                if(distance < edgeDistance)
+                {
+                    const glm::vec3 force = edges[i] - collider2.transform.GetPosition();
+                    collider1.rigidbody.force += 0.5f * force;
+                    collider2.rigidbody.force -= 0.5f * force;
+                }
+            }
+        }
+        else if(collider1.rigidbody.collisionType == 1 && collider2.rigidbody.collisionType == 1) // BOX && BOX
+        {
+            const glm::vec3 pos = collider1.transform.GetPosition(), targetPos = collider2.transform.GetPosition();
+            const float radius = collider1.rigidbody.radius, targetRadius = collider2.rigidbody.radius;
+
+            const std::vector<glm::vec3> edges = {
+                glm::vec3(pos.x - radius, pos.y - radius, pos.z - radius),
+                glm::vec3(pos.x - radius, pos.y - radius, pos.z + radius),
+                glm::vec3(pos.x - radius, pos.y + radius, pos.z - radius),
+                glm::vec3(pos.x - radius, pos.y + radius, pos.z + radius),
+                glm::vec3(pos.x + radius, pos.y - radius, pos.z - radius),
+                glm::vec3(pos.x + radius, pos.y - radius, pos.z + radius),
+                glm::vec3(pos.x + radius, pos.y + radius, pos.z - radius),
+                glm::vec3(pos.x + radius, pos.y + radius, pos.z + radius) };
+
+            const std::vector<glm::vec3> targetEdges = {
+                glm::vec3(targetPos.x - targetRadius, targetPos.y - targetRadius, targetPos.z - targetRadius),
+                glm::vec3(targetPos.x - targetRadius, targetPos.y - targetRadius, targetPos.z + targetRadius),
+                glm::vec3(targetPos.x - targetRadius, targetPos.y + targetRadius, targetPos.z - targetRadius),
+                glm::vec3(targetPos.x - targetRadius, targetPos.y + targetRadius, targetPos.z + targetRadius),
+                glm::vec3(targetPos.x + targetRadius, targetPos.y - targetRadius, targetPos.z - targetRadius),
+                glm::vec3(targetPos.x + targetRadius, targetPos.y - targetRadius, targetPos.z + targetRadius),
+                glm::vec3(targetPos.x + targetRadius, targetPos.y + targetRadius, targetPos.z - targetRadius),
+                glm::vec3(targetPos.x + targetRadius, targetPos.y + targetRadius, targetPos.z + targetRadius) };
+
+            for(int i = 0; i < 8; i++) for(int e = 0; e < 8; e++)
+            {
+                const float edgeDistance = glm::distance(edges[i], collider1.transform.GetPosition());
+                const float targetEdgeDistance = glm::distance(targetEdges[e], collider1.transform.GetPosition());
+                if(targetEdgeDistance < edgeDistance)
+                {
+                    const glm::vec3 force = edges[i] - collider2.transform.GetPosition();
+                    collider1.rigidbody.force += 0.5f * force;
+                    collider2.rigidbody.force -= 0.5f * force;
+                }
+            }
         }
     }
 }
