@@ -3,17 +3,50 @@
 void Physics::UsePhysics(Entity& entity, float gravityForce, float deltaTime)
 {
     // Check collision with the plane, if true, bounce
-    if(entity.transform.GetPosition().y - entity.rigidbody.radius/2 <= 0)
+    if(entity.rigidbody.collisionType == 0)
     {
-        entity.rigidbody.force.y = (-entity.rigidbody.force.y + entity.rigidbody.bauncing)/2;
-
-        entity.rigidbody.force.x = Lerp(entity.rigidbody.force.x, 0.0f, 2.0f * deltaTime);
-        entity.rigidbody.force.z = Lerp(entity.rigidbody.force.z, 0.0f, 2.0f * deltaTime);
+        if(entity.transform.GetPosition().y - entity.rigidbody.radius/2 <= 0)
+        {
+            entity.rigidbody.force.y = (-entity.rigidbody.force.y + entity.rigidbody.bauncing)/2;
+            entity.rigidbody.force.x = Lerp(entity.rigidbody.force.x, 0.0f, 2.0f * deltaTime);
+            entity.rigidbody.force.z = Lerp(entity.rigidbody.force.z, 0.0f, 2.0f * deltaTime);
+        }
+        else
+        {
+            // if false, apply more gravity to object
+            entity.rigidbody.force.y += gravityForce * deltaTime;
+        }
     }
-    else
+    else if(entity.rigidbody.collisionType == 1)
     {
-        // if false, apply more gravity to object
-        entity.rigidbody.force.y += gravityForce * deltaTime;
+        const glm::vec3 pos = entity.transform.GetPosition();
+        const float radius = entity.rigidbody.radius;
+        bool collided;
+        const std::vector<glm::vec3> edges = {
+            glm::vec3(pos.x - radius, pos.y - radius, pos.z - radius),
+            glm::vec3(pos.x - radius, pos.y - radius, pos.z + radius),
+            glm::vec3(pos.x - radius, pos.y + radius, pos.z - radius),
+            glm::vec3(pos.x - radius, pos.y + radius, pos.z + radius),
+            glm::vec3(pos.x + radius, pos.y - radius, pos.z - radius),
+            glm::vec3(pos.x + radius, pos.y - radius, pos.z + radius),
+            glm::vec3(pos.x + radius, pos.y + radius, pos.z - radius),
+            glm::vec3(pos.x + radius, pos.y + radius, pos.z + radius) };
+
+        collided = false;
+        for(int i = 0; i < 8; i++)
+        {
+            if(edges[i].y <= 0)
+            {
+                const float distance = edges[i].y - entity.transform.GetPosition().y;
+                entity.rigidbody.force.y = (-distance + entity.rigidbody.bauncing);
+                entity.rigidbody.force.x = Lerp(entity.rigidbody.force.x, 0.0f, 2.0f * deltaTime);
+                entity.rigidbody.force.z = Lerp(entity.rigidbody.force.z, 0.0f, 2.0f * deltaTime);
+                collided = true;
+            }
+        }
+
+        if(!collided)
+            entity.rigidbody.force.y += gravityForce * deltaTime;
     }
 
     // Apply forces on the transform positions

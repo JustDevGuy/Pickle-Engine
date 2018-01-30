@@ -16,8 +16,8 @@ Model Loader::LoadModel(std::string objFile)
     vbos.push_back(StoreData(2, 3, model.normals));
     glBindVertexArray(0);
 
-    int vertexCount = model.indices.size();
-    Model out_model(vaoID, vertexCount);
+    const int vertexCount = model.indices.size();
+    const Model out_model(vaoID, vertexCount);
     return out_model;
 }
 
@@ -50,7 +50,7 @@ GLuint Loader::BindIndices(std::vector<unsigned int> indices)
     GLuint vboID;
     glGenBuffers(1, &vboID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
     return vboID;
 }
 

@@ -1,5 +1,12 @@
 #include "Renderer.h"
 
+void Renderer::Prepare(float r, float g, float b) //Prepare the screen
+{
+    glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(r, g, b, 1.0f);
+}
+
 void Renderer::Render(glm::vec3 lightDirection, Camera camera)
 {
     Prepare(0.f, 0.f, 0.f);
@@ -11,11 +18,13 @@ void Renderer::Render(glm::vec3 lightDirection, Camera camera)
     for(auto const &i : entities)
     {
         PrepareModel(i.first);
-        std::vector<Entity> batch = i.second;
-        for(auto entity : batch)
+        Model model = i.first;
+        const int modelCount = model.GetVertexCount();
+
+        for(auto const &entity : i.second)
         {
             PrepareInstance(entity);
-            glDrawElements(GL_TRIANGLES, entity.model.GetVertexCount(), GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, modelCount, GL_UNSIGNED_INT, nullptr);
         }
         UnbindModel();
     }
@@ -26,56 +35,35 @@ void Renderer::Render(glm::vec3 lightDirection, Camera camera)
 
 void Renderer::AddEntity(Entity entity)
 {
-    if(entities.find(entity.model) != entities.end()) ///MODEL FOUND
-    {
-        entities[entity.model].push_back(entity);
-    }
-    else ///MODEL NOT FOUND
-    {
-        std::vector<Entity> newBatch = {entity};
-        entities[entity.model] = newBatch;
-    }
+    entities[entity.model].push_back(entity);
 }
 
-void Renderer::AddEntities(std::vector<Entity>entityList)
+void Renderer::AddEntities(std::vector<Entity> entityList)
 {
-    if(entities.find(entityList[0].model) != entities.end()) ///MODEL FOUND
-    {
-        entities[entityList[0].model].insert(entities[entityList[0].model].end(), entityList.begin(), entityList.end());
-    }
-    else ///MODEL NOT FOUND
-    {
-        entities[entityList[0].model] = entityList;
-    }
-}
-
-void Renderer::CleanUp()
-{
-    shader.CleanUp();
-}
-
-void Renderer::Prepare(float r, float g, float b) //Prepare the screen
-{
-    glEnable(GL_DEPTH_TEST);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(r, g, b, 1.0f);
+    entities[entityList[0].model].insert(entities[entityList[0].model].end(), entityList.begin(), entityList.end());
 }
 
 void Renderer::PrepareModel(Model model) //Prepare model for rendering
 {
-    if(model.GetFakeLighting()) //Model doens't receive light if enable
+    if(model.GetFakeLighting()) //Model doesn't receive light if enable
         shader.UseFakeLighting(true);
 
     if(model.GetIsTransparency()) //Transparent texture
         glDisable(GL_CULL_FACE);
 
-    if(model.GetUseReflection())
+    if(model.GetUseReflection()) //Specular lighting
         shader.UseReflection(true);
 
     glBindVertexArray(model.GetVaoID());
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
+}
+
+void Renderer::PrepareInstance(Entity entity) //Prepare model texture and shader
+{
+    shader.LoadTransformationMatrix(entity.transform.GetTransform());
+    entity.texture.Bind();
 }
 
 void Renderer::UnbindModel()
@@ -91,8 +79,7 @@ void Renderer::UnbindModel()
     glBindVertexArray(0);
 }
 
-void Renderer::PrepareInstance(Entity entity) //Prepare model texture and shader
+void Renderer::CleanUp()
 {
-    shader.LoadTransformationMatrix(entity.transform.GetTransform());
-    entity.texture.Bind();
+    shader.CleanUp();
 }

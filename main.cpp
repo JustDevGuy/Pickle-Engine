@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     //Create models
     Entity plane(loader.LoadModel(".//res//models//plane.obj"), ".//res//textures//stoneFloor.png", glm::vec3(0,0,0), glm::vec3(0,0,0));
 
-    Entity cube(loader.LoadModel(".//res//models//cube.obj"), ".//res//textures//stoneFloor.png", glm::vec3(0,1.3f,0), glm::vec3(0,0,0));
+    Entity cube(loader.LoadModel(".//res//models//cube.obj"), ".//res//textures//stoneFloor.png", glm::vec3(0,1.5f,0), glm::vec3(0,0,0));
     cube.rigidbody.collisionType = 1;
     cube.rigidbody.radius = 2.0f;
 
@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     sphere.model.SetUseReflection(true);
 
     std::vector<Entity> spheres;
-    for(int i = 1; i < 40; i++)
+    for(int i = 1; i < 100; i++)
     {
         sphere.transform.SetPosition(rand() % 5 + (-5), rand() % 5 + 15, rand() % 5 + (-5));
         sphere.rigidbody.id = i;
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
         spheres[0].transform.SetScale(0);
 
         //Basic physics
-        if(!window.IsKeyPressed(GLFW_KEY_SPACE))
+        if(window.IsKeyPressed(GLFW_KEY_SPACE))
         {
             for(auto &rigidbody : spheres)
             {

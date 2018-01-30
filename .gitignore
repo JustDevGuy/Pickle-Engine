@@ -1,0 +1,12 @@
+.gitignore
+
+
+.gitattributes
+*.cbp
+*.depend
+*.layout
+bin/
+libraries/
+obj/
+.gitattributes
+.gitattributes

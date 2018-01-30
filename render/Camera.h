@@ -34,20 +34,29 @@ public:
     void SetPosition(glm::vec3 pos) { m_position.x = pos.x; m_position.y = pos.y; m_position.z = pos.z; }
 
     // Move camera function
-    void Move(Application display)
+    void Move(Application window)
     {
-        if(glfwGetKey(display.GetWindow(), GLFW_KEY_W) == GLFW_TRUE) dz = -9 * display.GetDeltaTime();
-        else if(glfwGetKey(display.GetWindow(), GLFW_KEY_S) == GLFW_TRUE) dz = 9 * display.GetDeltaTime();
+        // Camera movement with keys
+        if(window.IsKeyPressed(GLFW_KEY_W)) dz = -9 * window.GetDeltaTime();
+        else if(window.IsKeyPressed(GLFW_KEY_S)) dz = 9 * window.GetDeltaTime();
         else dz = 0;
 
-        if(glfwGetKey(display.GetWindow(), GLFW_KEY_A) == GLFW_TRUE) dx = 9 * display.GetDeltaTime();
-        else if(glfwGetKey(display.GetWindow(), GLFW_KEY_D) == GLFW_TRUE) dx = -9 * display.GetDeltaTime();
+        if(window.IsKeyPressed(GLFW_KEY_A)) dx = 9 * window.GetDeltaTime();
+        else if(window.IsKeyPressed(GLFW_KEY_D)) dx = -9 * window.GetDeltaTime();
         else dx = 0;
+
+        // Camera movement with mouse
+        m_rotation.y += window.GetMouseVelocityX() * 0.4f * window.GetDeltaTime();
+        m_rotation.x += window.GetMouseVelocityY() * 0.4f * window.GetDeltaTime();
+        m_rotation.x = glm::clamp(m_rotation.x, -1.0f, 1.3f); // Limit camera X rotation
+        m_rotation.y = glm::clamp(m_rotation.y, -2.0f, 2.0f);
 
         // Set the view matrix with the camera positions and rotations
         glm::vec3 forward(m_view[0][2], m_view[1][2], m_view[2][2]);
         glm::vec3 strafe(m_view[0][0], m_view[1][0], m_view[2][0]);
         m_position += (-dz * forward + dx * strafe);
+
+        // Update view matrix
         UpdateViewMatrix();
     }
 
@@ -67,15 +76,12 @@ private:
     {
         glm::quat pitch = glm::angleAxis(m_rotation.x, glm::vec3(1,0,0));
         glm::quat yaw = glm::angleAxis(m_rotation.y, glm::vec3(0,1,0));
-        glm::quat row = glm::angleAxis(m_rotation.z, glm::vec3(0,0,1));
 
-        glm::quat orientation = pitch * yaw * row;
-        orientation = glm::normalize(orientation);
-        glm::mat4 rotate = glm::mat4_cast(orientation);
+        glm::mat4 viewRotation = glm::mat4_cast((glm::quat)glm::normalize(pitch * yaw));
         glm::mat4 translate = glm::mat4(1.0f);
         translate = glm::translate(translate, m_position);
 
-        m_view = rotate * translate;
+        m_view = viewRotation * translate;
     }
 };
 

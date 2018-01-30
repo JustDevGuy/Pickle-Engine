@@ -7,8 +7,8 @@ Application::Application(std::string title, int width, int height, bool fullscre
         std::cout << "error in initialize GLFW" << std::endl;
 
     // Set some OpenGL basic configurations
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -33,6 +33,7 @@ Application::Application(std::string title, int width, int height, bool fullscre
     glfwMakeContextCurrent(display);
     if(glewInit() != GLEW_OK)
         std::cout << "error in initialize GLEW" << std::endl;
+    glViewport(0, 0, width, height);
 }
 
 void Application::Update()

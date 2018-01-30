@@ -14,7 +14,7 @@ uniform mat4 view;
 uniform vec3 lightPosition;
 
 void main() {
-	vec4 worldPosition = transform * vec4(position, 1.0); 
+	vec4 worldPosition = transform * vec4(gl_InstanceID + position, 1.0); 
 	gl_Position = view * worldPosition;
 	tex_coords = texCoord;
 	
